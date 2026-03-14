@@ -92,6 +92,7 @@
     * [How to Create Alpha Role on Tathya](tools/tathya/how-to/create-alpha-role.md)
     * [How to Request for the Report](tools/tathya/how-to/report-request.md) 
 * [Unigate](tools/unigate/email-integration.md)
+* [Unigate (New)](tools/unigate/new.md)
 
 ## Client Communication
 
