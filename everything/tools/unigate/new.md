@@ -1,4 +1,4 @@
-# Unigate: internal user manual and onboarding guide
+# Unigate: Internal user manual and onboarding guide
 
 Unigate is a centralized gateway used by HotWax Commerce to manage all email and shipping integrations in one place. Instead of setting up Klaviyo or FedEx inside every single application, we set it up once in Unigate, and other systems (like Maarg) simply "talk" to Unigate.
 
@@ -33,24 +33,24 @@ graph TD
 
 Think of Unigate as a universal translator and orchestration hub. It sits between your core logic (Maarg) and the outside world (Klaviyo, FedEx).
 
-### A. The problem: integration sprawl
+### A. The problem: Integration sprawl
 In the traditional model, every application has to be individually "taught" how to talk to every external provider. If you have five applications (brand-specific instances) and three providers (Klaviyo, FedEx, UPS), you end up with 15 complex, hard-to-maintain connections.
 
-### B. The Unigate solution: one connection, many adapters
+### B. The Unigate solution: One connection, many adapters
 Unigate simplifies this into a centralized link. Maarg speaks a "Standard Language" to Unigate, and Unigate translates that into the specific dialect of the provider.
 
 #### 1. The request lifecycle
 When a request is made, it follows this automated path:
 1.  **Incoming Request**: Maarg sends a standard JSON payload (e.g., "Ready for Pickup") to the Unigate REST API.
-2.  **Authentication & Tenant Check**: Unigate verifies the **API Key** and checks the `CommGatewayAuth` record to ensure this specific brand (e.g., ADOC) has permission to use the gateway.
-3.  **The Adapter Router**: Unigate looks up its configuration. It identifies which **Adapter Service** (e.g., `KlaviyoServices.send#Email`) is responsible for this gateway.
-4.  **Transformation**: The Adapter takes the generic HotWax data and runs it through a **Template** (like `SendEmailTemplate.ftl`) to format it exactly how the provider requires.
+2.  **Authentication & Tenant Check**: Unigate verifies the API Key and checks the `CommGatewayAuth` record to verify this specific brand (e.g., ADOC) has permission to use the gateway.
+3.  **The Adapter Router**: Unigate looks up its configuration. It identifies which Adapter Service (e.g., `KlaviyoServices.send#Email`) is responsible for this gateway.
+4.  **Transformation**: The Adapter takes the generic HotWax data and runs it through a Template (like `SendEmailTemplate.ftl`) to format it exactly how the provider requires.
 5.  **External Handshake**: Unigate makes the final encrypted API call to the provider (Klaviyo/FedEx) and captures the response.
 6.  **Response Feedback**: Unigate translates the provider's technical response (success or error) back into a simple status for Maarg.
 
 #### 2. Configuration-driven approach
-Unigate is built so that adding a new brand often requires **zero new code**.
-- Onboarding a new brand is as simple as adding a few **XML records** (Party, UserAccount, and CommGatewayAuth). The software "discovers" these new records and immediately knows how to handle the brand's data.
+Unigate is built so that adding a new brand often requires zero new code.
+- Onboarding a new brand is as simple as adding a few XML records (Party, UserAccount, and CommGatewayAuth). The software "discovers" these new records and immediately knows how to handle the brand's data.
 
 #### 3. Security and multi-tenancy
 Even though Unigate is a shared system, it is strictly partitioned:
@@ -62,7 +62,7 @@ Even though Unigate is a shared system, it is strictly partitioned:
 
 To set up a new brand, you need to load a specific set of data into the Unigate instance.
 
-### Step 1: create the brand identity
+### Step 1: Create the brand identity
 First, we tell Unigate that a new brand exists. Change the `partyId` and `organizationName` to match the brand.
 
 ```xml
@@ -71,8 +71,8 @@ First, we tell Unigate that a new brand exists. Change the `partyId` and `organi
 </co.hotwax.unigate.Party>
 ```
 
-### Step 2: create the security account
-Every brand needs an "API User" account in Unigate. This is what Maarg will use to login.
+### Step 2: Create the security account
+Every brand needs an "API User" account in Unigate. This is what Maarg will use to log in.
 
 ```xml
 <moqui.security.UserAccount 
@@ -90,7 +90,7 @@ Every brand needs an "API User" account in Unigate. This is what Maarg will use 
 />
 ```
 
-### Step 3: configure gateway access
+### Step 3: Configure gateway access
 Tell Unigate where to send the data (e.g., the Klaviyo URL) and how to authenticate with that provider.
 
 ```xml
@@ -102,7 +102,7 @@ Tell Unigate where to send the data (e.g., the Klaviyo URL) and how to authentic
 />
 ```
 
-### Step 4: activate the integration
+### Step 4: Activate the integration
 Link the Brand (Step 1) to the Gateway (Klaviyo) and the Remote Config (Step 3).
 
 ```xml
@@ -116,7 +116,7 @@ Link the Brand (Step 1) to the Gateway (Klaviyo) and the Remote Config (Step 3).
 
 ---
 
-## 4. Security: generating the Unigate API key
+## 4. Security: Generating the Unigate API key
 
 Maarg needs a special "Login Key" to talk to Unigate securely. Do not use the account password.
 
@@ -137,7 +137,7 @@ Now, you must go to the **Maarg Instance** and tell it how to reach Unigate usin
 Add this data to the Maarg instance. 
 
 > [!IMPORTANT]
-> - Replace `INSERT_GENERATED_KEY_HERE` with the key you generated in Section 3.
+> - Replace `INSERT_GENERATED_KEY_HERE` with the key you generated in Section 4.
 > - `remoteId` MUST be the Unigate Gateway ID (e.g., `KLAVIYO`).
 > - `internalId` MUST be the Unigate Tenant ID (e.g., `BRAND_NAME`).
 
@@ -168,7 +168,7 @@ Finally, tell Maarg which emails should be sent via Unigate.
 
 ## 6. Understanding data payloads
 
-To ensure setups are correct, you must understand what data Unigate actually sends to the external services.
+To verify setups are correct, you must understand what data Unigate actually sends to the external services.
 
 ### A. Klaviyo data structure
 When Maarg triggers an email or event, Unigate transforms the data into the following JSON format for Klaviyo:
@@ -181,8 +181,8 @@ When Maarg triggers an email or event, Unigate transforms the data into the foll
 | `order_number` | The customer-facing Order Number. | `ORD-2024-001` |
 | `first_name` | Customer's first name. | `John` |
 | `last_name` | Customer's last name. | `Doe` |
-| `pickup_location` | Details of the store where the order is being picked up. | `{ "company": "Downtown Store", ... }` |
-| `line_items` | List of products, quantities, and prices. | `[{ "name": "Classic T", "price": 20.00 }, ...]` |
+| `pickup_location` | Details of the store where the order is being picked up. | `{ \"company\": \"Downtown Store\", ... }` |
+| `line_items` | List of products, quantities, and prices. | `[{ \"name\": \"Classic T\", \"price\": 20.00 }, ...]` |
 | `grand_total` | Final total amount of the order. | `105.50` |
 
 > [!NOTE]
@@ -199,6 +199,6 @@ For shipping integrations, Unigate handles the exchange with carriers.
 
 ## 7. Troubleshooting
 
-*   **Maarg cannot connect to Unigate:** check if the `api-key` in Maarg matches the one generated in Unigate. Ensure the Unigate URL is accessible from Maarg.
-*   **Klaviyo is not receiving events:** check the `SystemMessageRemote` URL in Unigate. Ensure the `authHeaderValue` (Klaviyo API Key) is correct.
-*   **Permission denied:** ensure the brand API user is in the `UNIGATE_API` group in Unigate.
+*   **Maarg cannot connect to Unigate:** check if the `api-key` in Maarg matches the one generated in Unigate. Verify the Unigate URL is accessible from Maarg.
+*   **Klaviyo is not receiving events:** check the `SystemMessageRemote` URL in Unigate. Verify the `authHeaderValue` (Klaviyo API Key) is correct.
+*   **Permission denied:** verify the brand API user is in the `UNIGATE_API` group in Unigate.
