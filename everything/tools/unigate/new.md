@@ -156,7 +156,7 @@ Add this data to the Maarg instance.
 
 Finally, tell Maarg which emails should be sent via Unigate.
 
-```xml
+```xml2
 <org.apache.ofbiz.product.store.ProductStoreEmailSetting 
     emailType="READY_FOR_PICKUP" 
     productStoreId="STORE_ID" 
@@ -181,12 +181,12 @@ When Maarg triggers an email or event, Unigate transforms the data into the foll
 | `order_number` | The customer-facing Order Number. | `ORD-2024-001` |
 | `first_name` | Customer's first name. | `John` |
 | `last_name` | Customer's last name. | `Doe` |
-| `pickup_location` | Details of the store where the order is being picked up. | `{ \"company\": \"Downtown Store\", ... }` |
-| `line_items` | List of products, quantities, and prices. | `[{ \"name\": \"Classic T\", \"price\": 20.00 }, ...]` |
+| `pickup_location` | Details of the store where the order is being picked up. | `{ "company": "Downtown Store", ... }` |
+| `line_items` | List of products, quantities, and prices. | `[{ "name": "Classic T", "price": 20.00 }, ...]` |
 | `grand_total` | Final total amount of the order. | `105.50` |
 
 > [!NOTE]
-> Unigate also calculates **Savings Total** (discounts) and **Subtotal** automatically before sending to Klaviyo.
+> Unigate also calculates Savings Total (discounts) and Subtotal automatically before sending to Klaviyo.
 
 ### B. Shipping data
 For shipping integrations, Unigate handles the exchange with carriers.
