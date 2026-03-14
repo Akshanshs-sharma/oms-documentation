@@ -13,22 +13,6 @@ Unigate works like a universal adapter:
 2. **The Gateway**: The service we are connecting to (e.g., Klaviyo for emails).
 3. **The Connection (API Key)**: How Unigate and Maarg securely talk to each other.
 
-### System architecture
-
-```mermaid
-graph TD
-    A[Maarg / External Instance] -- Standard Request --> B(Unigate REST API)
-    B --> C{Unigate Core Logic}
-    C -- Lookup Auth/Config --> D[Gateway Config & Party Data]
-    D --> E{Adapter Router}
-    E -- Dynamic Service Call --> F[Klaviyo Adapter]
-    E -- Dynamic Service Call --> G[Shipping Carrier Adapter]
-    F -- API Call --> H((Klaviyo API))
-    G -- API Call --> I((FedEx / UPS API))
-```
-
----
-
 ## 2. How Unigate works
 
 Think of Unigate as a universal translator and orchestration hub. It sits between your core logic (Maarg) and the outside world (Klaviyo, FedEx).
